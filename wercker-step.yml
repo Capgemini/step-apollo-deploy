@@ -1,0 +1,22 @@
+name: apollo-deploy
+version: 0.0.12
+description: A Wercker step for deploying Apollo.
+keywords:
+  - Apollo
+  - paas
+properties:
+  cloud:
+    type: string
+    required: true
+  terraform_version:
+    type: string
+    required: true
+  artifact_name:
+    type: string
+    required: true
+  artifact_version:
+    type: string
+    required: true
+  run_tests:
+    type: string
+    required: false
