@@ -4,7 +4,7 @@ set +e
 if [ ! -n "$WERCKER_APOLLO_DEPLOY_CLOUD" ];then
     fail 'Please specifiy the Apollo cloud provider.'
 else
-    CLOUD=${WERCKER_APOLLO_DEPLOY_CLOUD}
+    export APOLLO_PROVIDER=${WERCKER_APOLLO_DEPLOY_CLOUD}
 fi
 
 if [ ! -n "$WERCKER_APOLLO_DEPLOY_TERRAFORM_VERSION" ];then
@@ -14,14 +14,14 @@ else
 fi
 
 if [ ! -n "$WERCKER_APOLLO_DEPLOY_ARTIFACT_NAME" ];then
-    fail 'Please specifiy the terraform version.'
+    fail 'Please specifiy the Artifact name.'
 else
     export TF_VAR_atlas_artifact_master=${WERCKER_APOLLO_DEPLOY_ARTIFACT_NAME}
     export TF_VAR_atlas_artifact_slave=${WERCKER_APOLLO_DEPLOY_ARTIFACT_NAME}
 fi
 
 if [ ! -n "$WERCKER_APOLLO_DEPLOY_ARTIFACT_VERSION" ];then
-    fail 'Please specifiy the terraform version.'
+    fail 'Please specifiy the Artifact version.'
 else
     export TF_VAR_atlas_artifact_version_master=${WERCKER_APOLLO_DEPLOY_ARTIFACT_VERSION}
     export TF_VAR_atlas_artifact_version_slave=${WERCKER_APOLLO_DEPLOY_ARTIFACT_VERSION}
@@ -33,8 +33,6 @@ if [ -n "$WERCKER_APOLLO_DEPLOY_RUN_TESTS" ];then
     export APOLLO_serverspec_tests_path=/tmp
 fi
 
-export APOLLO_PROVIDER=${CLOUD}
-
 # Installing terraform.
 mkdir terraform-package
 pushd terraform-package
@@ -45,12 +43,8 @@ popd
 terraform version
 
 # Managing ssh keys.
-pushd ~/.ssh
-ssh-keygen -P "" -t rsa -f id_rsa_tmp -b 4096 -C "email@example.com"
-export TF_VAR_key_file='~/.ssh/id_rsa_tmp.pub'
-eval `ssh-agent -s`
-ssh-add id_rsa_tmp
-popd
+source "${WERCKER_STEP_ROOT}/${APOLLO_PROVIDER}/util.sh"
+setup_ssh_config
 
 # Deploy.
 /bin/bash bootstrap/apollo-launch.sh
