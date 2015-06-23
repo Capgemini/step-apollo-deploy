@@ -31,6 +31,7 @@ if [ -n "$WERCKER_APOLLO_DEPLOY_RUN_TESTS" ];then
     export APOLLO_serverspec_run_tests=${WERCKER_APOLLO_DEPLOY_RUN_TESTS}
     export APOLLO_serverspec_upload_folder=${WERCKER_APOLLO_DEPLOY_RUN_TESTS}
     export APOLLO_serverspec_tests_path=/tmp
+    export APOLLO_dockerbench_run_test=${WERCKER_APOLLO_DEPLOY_RUN_TESTS}
 fi
 
 # Installing terraform.
