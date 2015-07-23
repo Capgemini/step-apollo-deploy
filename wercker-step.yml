@@ -1,5 +1,5 @@
 name: apollo-deploy
-version: 4.0.0
+version: 4.0.1
 description: A Wercker step for deploying Apollo.
 keywords:
   - Apollo
